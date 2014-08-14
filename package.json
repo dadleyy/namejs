@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "a simple client interface for interacting with name.com's API",
   "main": "lib/index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "mocha"
+  },
   "author": "Danny Hadley <danny@dadleyy.com>",
   "license": "ISC",
   "devDependencies": {
