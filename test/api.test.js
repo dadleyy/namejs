@@ -58,13 +58,24 @@ describe('namejs client test suite', function() {
     it('should query the dns for a certain domain', function(done) {
       function finish(response) {
         var index = 0,
-            records = response.records,
-            record;
+            records = response.records;
 
         assert.equal(records.length > 0, true);
         done();
       }
       client().dns('lofti.li').then(finish);
+    });
+
+    it('should retreive a domain by name', function(done) {
+      function finish(response) {
+        var index = 0,
+            info = response;
+
+        assert.equal(info.domain_name, 'lofti.li');
+        done();
+      }
+
+      client().domain('lofti.li').then(finish);
     });
 
   });
