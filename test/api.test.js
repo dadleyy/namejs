@@ -20,7 +20,7 @@ describe('namejs client test suite', function() {
 
   describe('valid client creds', function() {
 
-    var user, token;
+    var user, token, domain;
 
     function client() {
       return new namejs.Client({
@@ -32,6 +32,7 @@ describe('namejs client test suite', function() {
     beforeEach(function() {
       user = process.env['API_USER'];
       token = process.env['API_TOKEN'];
+      domain = process.env['TEST_DOMAIN'];
     });
 
     it('should not throw an error if there was no problems with credentials', function() {
@@ -45,37 +46,65 @@ describe('namejs client test suite', function() {
       assert.equal(err, false);
     });
 
-    it('should make a http request to get client', function(done) {
+    it('should return a result from getDomains', function(done) {
       function finish(response) {
-        var not_undef = response.domains !== undefined;
-        assert.equal(not_undef, true);
+        assert.equal(response.result.code, 100);
         done();
       }
 
-      client().domains().then(finish);
+      function fail(info) {
+        assert.equal(true, false);
+        done();
+      }
+
+      client().getDomains().then(finish, fail);
     });
 
-    it('should query the dns for a certain domain', function(done) {
-      function finish(response) {
-        var index = 0,
-            records = response.records;
 
-        assert.equal(records.length > 0, true);
-        done();
-      }
-      client().dns('lofti.li').then(finish);
-    });
+    describe('domain specific', function() {
+    
+      it('getDns', function(done) {
+        function finish(response) {
+          assert.equal(response.result.code, 100);
+          done();
+        }
 
-    it('should retreive a domain by name', function(done) {
-      function finish(response) {
-        var index = 0,
-            info = response;
+        function fail(info) {
+          console.log('failed!');
+          done();
+        }
 
-        assert.equal(info.domain_name, 'lofti.li');
-        done();
-      }
+        client().getDnsFor(domain).then(finish, fail);
+      });
 
-      client().domain('lofti.li').then(finish);
+      it('should get info on single domain with getDomain', function(done) {
+        function finish(response) {
+          assert.equal(response.result.code, 100);
+          done();
+        }
+
+        function fail(info) {
+          console.log('failed!');
+          done();
+        }
+
+        client().getDomain(domain).then(finish, fail);
+      });
+
+      it('should reject if deleting a non-existent subdomain', function(done) {
+        var failed = false;
+
+        function success(response) { failed = false; }
+        function fail(info) { failed = true; }
+
+        function finish() {
+          assert.equal(failed, true);
+          done();
+        }
+
+        client().deleteSubdomain(domain, 'stub').then(success, fail).fin(finish);
+      });
+
     });
 
   });
