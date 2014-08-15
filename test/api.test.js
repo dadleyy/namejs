@@ -91,6 +91,38 @@ describe('namejs client test suite', function() {
         client().getDomain(domain).then(finish, fail);
       });
 
+      describe('creating and deleting', function() {
+
+        it('should resolve if creating a non-existent subdomain', function(done) {
+          var failed = false;
+
+          function success(response) { failed = false; }
+          function fail(info) { failed = true; }
+
+          function finish() {
+            assert.equal(failed, true);
+            done();
+          }
+
+          client().createSubdomain(domain, 'stub').then(success, fail).then(finish);
+        });
+
+        it('should resolve when deleting the previous subdomain', function(done) {
+          var failed = false;
+
+          function success(response) { failed = false; }
+          function fail(info) { failed = true; }
+
+          function finish() {
+            assert.equal(failed, true);
+            done();
+          }
+
+          client().deleteSubdomain(domain, 'stub').then(success, fail).then(finish);
+        });
+
+      });
+
       it('should reject if deleting a non-existent subdomain', function(done) {
         var failed = false;
 
