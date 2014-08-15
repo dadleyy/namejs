@@ -4,7 +4,7 @@
   "description": "a simple client interface for interacting with name.com's API",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --timeout 15000"
   },
   "author": "Danny Hadley <danny@dadleyy.com>",
   "license": "ISC",
