@@ -70,7 +70,6 @@ describe('namejs client test suite', function() {
         }
 
         function fail(info) {
-          console.log('failed!');
           done();
         }
 
@@ -84,14 +83,13 @@ describe('namejs client test suite', function() {
         }
 
         function fail(info) {
-          console.log('failed!');
           done();
         }
 
         client().getDomain(domain).then(finish, fail);
       });
 
-      describe('creating and deleting', function() {
+      describe('dns - creating and deleting', function() {
 
         it('should resolve if creating a non-existent subdomain', function(done) {
           var failed = false;
@@ -121,20 +119,53 @@ describe('namejs client test suite', function() {
           client().deleteSubdomain(domain, 'stub').then(success, fail).then(finish);
         });
 
-      });
+        it('should reject if deleting a non-existent subdomain', function(done) {
+          var failed = false;
 
-      it('should reject if deleting a non-existent subdomain', function(done) {
-        var failed = false;
+          function success(response) { failed = false; }
+          function fail(info) { failed = true; }
 
-        function success(response) { failed = false; }
-        function fail(info) { failed = true; }
+          function finish() {
+            assert.equal(failed, true);
+            done();
+          }
 
-        function finish() {
-          assert.equal(failed, true);
-          done();
-        }
+          client().deleteSubdomain(domain, 'stub').then(success, fail).fin(finish);
+        });
 
-        client().deleteSubdomain(domain, 'stub').then(success, fail).fin(finish);
+        it('should reject if getting dns for a non-existent domain', function(done) {
+          var failed = false,
+              message = false;
+
+          function success(response) { failed = false; }
+          function fail(info) { message = info; failed = true; }
+
+          function finish() {
+            assert.equal(failed, true);
+            assert.equal(message, 'Authorization Error - Domain Name');
+            done();
+          }
+
+          client().getDnsFor('thisdoesntexist.com').then(success, fail).fin(finish);
+        });
+
+        it('should reject if getting domain info for a non-existent domain', function(done) {
+          var failed = false,
+              message = false;
+
+          function success(response) { failed = false; }
+          function fail(info) { message = info; failed = true; }
+
+          function finish() {
+            assert.equal(failed, true);
+            assert.equal(message, 'Authorization Error - Domain Name');
+            done();
+          }
+
+          client().getDomain('thisdoesntexist.com').then(success, fail).fin(finish);
+        });
+
+
       });
 
     });

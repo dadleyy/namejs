@@ -1,6 +1,6 @@
 {
   "name": "namejs",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "a simple client interface for interacting with name.com's API",
   "main": "lib/index.js",
   "scripts": {
