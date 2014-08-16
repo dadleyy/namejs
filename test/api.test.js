@@ -98,11 +98,11 @@ describe('namejs client test suite', function() {
           function fail(info) { failed = true; }
 
           function finish() {
-            assert.equal(failed, true);
+            assert.equal(failed, false);
             done();
           }
 
-          client().createSubdomain(domain, 'stub').then(success, fail).then(finish);
+          client().createSubdomain(domain, 'stub').then(success, fail).fin(finish);
         });
 
         it('should resolve when deleting the previous subdomain', function(done) {
@@ -112,11 +112,11 @@ describe('namejs client test suite', function() {
           function fail(info) { failed = true; }
 
           function finish() {
-            assert.equal(failed, true);
+            assert.equal(failed, false);
             done();
           }
 
-          client().deleteSubdomain(domain, 'stub').then(success, fail).then(finish);
+          client().deleteSubdomain(domain, 'stub').then(success, fail).fin(finish);
         });
 
         it('should reject if deleting a non-existent subdomain', function(done) {
@@ -130,7 +130,7 @@ describe('namejs client test suite', function() {
             done();
           }
 
-          client().deleteSubdomain(domain, 'stub').then(success, fail).fin(finish);
+          client().deleteSubdomain(domain, 'nonexistent').then(success, fail).fin(finish);
         });
 
         it('should reject if getting dns for a non-existent domain', function(done) {
